@@ -2,16 +2,28 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Avatar, Dropdown, Label, ListBox, Separator } from "@heroui/react";
 import type { Selection } from "@heroui/react";
 import { ArrowRightFromSquare, Gear, Persons } from "@gravity-ui/icons";
+import { useAuth } from "../context/AuthContext";
 
 const menuItems = [
   { id: "home", label: "Home", path: "/" },
   { id: "agents", label: "Agents", path: "/agents" },
+  { id: "skills", label: "Skills", path: "/skills" },
   { id: "settings", label: "Settings", path: "/settings" },
 ];
 
 function SidebarNav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, signOut } = useAuth();
+
+  const fullName = user?.user_metadata?.full_name ?? "User";
+  const email = user?.email ?? "";
+  const initials = fullName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   const currentItem =
     menuItems.find((item) => item.path === location.pathname) ?? menuItems[0];
@@ -55,18 +67,14 @@ function SidebarNav() {
           <Dropdown.Trigger className="w-full rounded-xl">
             <div className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-surface-secondary transition-colors">
               <Avatar size="sm">
-                <Avatar.Image
-                  alt="Oli Luke"
-                  src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-                />
-                <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
+                <Avatar.Fallback>{initials}</Avatar.Fallback>
               </Avatar>
               <div className="min-w-0 flex flex-col">
                 <p className="truncate text-sm leading-5 font-medium">
-                  Jane Doe
+                  {fullName}
                 </p>
                 <p className="truncate text-xs leading-none text-muted">
-                  Product Designer
+                  {email}
                 </p>
               </div>
             </div>
@@ -75,16 +83,12 @@ function SidebarNav() {
             <div className="px-3 pt-3 pb-1">
               <div className="flex items-center gap-2">
                 <Avatar size="sm">
-                  <Avatar.Image
-                    alt="Jane Doe"
-                    src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-                  />
-                  <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
+                  <Avatar.Fallback>{initials}</Avatar.Fallback>
                 </Avatar>
                 <div className="flex flex-col gap-0">
-                  <p className="text-sm leading-5 font-medium">Jane Doe</p>
+                  <p className="text-sm leading-5 font-medium">{fullName}</p>
                   <p className="text-xs leading-none text-muted">
-                    jane@example.com
+                    {email}
                   </p>
                 </div>
               </div>
@@ -108,7 +112,7 @@ function SidebarNav() {
                   <Persons className="size-3.5 text-muted" />
                 </div>
               </Dropdown.Item>
-              <Dropdown.Item id="logout" textValue="Logout" variant="danger">
+              <Dropdown.Item id="logout" textValue="Logout" variant="danger" onAction={signOut}>
                 <div className="flex w-full items-center justify-between gap-2">
                   <Label>Log Out</Label>
                   <ArrowRightFromSquare className="size-3.5 text-danger" />

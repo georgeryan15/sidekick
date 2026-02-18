@@ -18,6 +18,12 @@ export const agent = new Agent({
   name: "Sidekick",
   instructions,
   model: "gpt-5.2",
+  modelSettings: {
+    reasoning: {
+      effort: "low",
+      summary: "concise",
+    },
+  },
   tools: [execTool],
   handoffs: [handoff(skillBuilderAgent)],
 });

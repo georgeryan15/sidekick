@@ -49,6 +49,27 @@ export function setupWebSocket(server: Server) {
   });
 }
 
+const MAX_STATUS_LENGTH = 80;
+
+function truncate(str: string, max = MAX_STATUS_LENGTH): string {
+  const oneLine = str.replace(/\n/g, " ").trim();
+  return oneLine.length <= max ? oneLine : oneLine.slice(0, max - 1) + "…";
+}
+
+function summarizeToolArgs(argsJson?: string): string | null {
+  if (!argsJson) return null;
+  try {
+    const args = JSON.parse(argsJson);
+    const values = Object.values(args).filter(
+      (v) => typeof v === "string" || typeof v === "number"
+    );
+    if (values.length === 0) return null;
+    return truncate(values.join(", "));
+  } catch {
+    return null;
+  }
+}
+
 async function handleChat(
   ws: WebSocket,
   messages: { role: string; content: string }[]
@@ -60,28 +81,57 @@ async function handleChat(
   try {
     const result = await run(agent, input, { stream: true });
 
-    const textStream = result.toTextStream({
-      compatibleWithNodeStreams: true,
-    });
+    for await (const event of result) {
+      if (ws.readyState !== WebSocket.OPEN) break;
 
-    textStream.on("data", (chunk: Buffer) => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "text", content: chunk.toString() }));
+      if (event.type === "raw_model_stream_event") {
+        if (event.data.type === "output_text_delta") {
+          ws.send(JSON.stringify({ type: "text", content: event.data.delta }));
+        }
+      } else if (event.type === "run_item_stream_event") {
+        if (event.name === "tool_called") {
+          const rawItem = event.item.rawItem as {
+            name?: string;
+            arguments?: string;
+          };
+          const name = rawItem.name ?? "unknown";
+          const detail = summarizeToolArgs(rawItem.arguments);
+          const content = detail
+            ? `Calling tool: ${name} — ${detail}`
+            : `Calling tool: ${name}`;
+          ws.send(JSON.stringify({ type: "status", content }));
+        } else if (event.name === "handoff_requested") {
+          const rawItem = event.item.rawItem as { name?: string };
+          const name = rawItem.name ?? "unknown";
+          ws.send(
+            JSON.stringify({
+              type: "status",
+              content: `Handing off to ${name}`,
+            })
+          );
+        } else if (event.name === "reasoning_item_created") {
+          const rawItem = event.item.rawItem as {
+            content?: Array<{ text?: string }>;
+          };
+          const text = rawItem.content?.[0]?.text;
+          const summary = text ? truncate(text, 80) : "Thinking...";
+          ws.send(
+            JSON.stringify({ type: "status", content: summary })
+          );
+        }
+      } else if (event.type === "agent_updated_stream_event") {
+        ws.send(
+          JSON.stringify({
+            type: "status",
+            content: `Now running: ${event.agent.name}`,
+          })
+        );
       }
-    });
+    }
 
-    textStream.on("end", () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "done" }));
-      }
-    });
-
-    textStream.on("error", (err: Error) => {
-      console.error("Stream error:", err);
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "error", content: err.message }));
-      }
-    });
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: "done" }));
+    }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Agent error:", message);

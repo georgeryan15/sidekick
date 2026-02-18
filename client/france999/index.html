@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>France — A Brief History</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav">
+        <div class="brand">France</div>
+        <div class="nav-links">
+          <a href="#history">History</a>
+          <a href="#highlights">Highlights</a>
+          <a class="btn" href="#visit">Plan a Visit</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <h1>France: From Gaul to the Republic</h1>
+        <p class="subtitle">
+          A fast, readable overview of the events that shaped modern France.
+        </p>
+        <a class="cta" href="#history">Read the 300‑word overview</a>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="history" class="card">
+        <h2>300‑word overview</h2>
+        <p>
+          France’s story begins in ancient Gaul, a patchwork of Celtic peoples that came under Roman rule after Julius Caesar’s conquest in the 1st century BCE. Roman towns, roads, and laws left a deep imprint, even as Latin gradually evolved into early forms of French. After Rome weakened, Germanic Franks rose to power; in 496, King Clovis converted to Christianity, linking the monarchy to the Church and helping unify the realm. In the 8th–9th centuries, Charlemagne forged a vast empire and promoted learning, but after his death the territory fractured.
+        </p>
+        <p>
+          Medieval France grew under Capetian kings who expanded royal authority and built Paris into a political center. The Hundred Years’ War (1337–1453) with England devastated the countryside yet strengthened French identity; Joan of Arc became a lasting symbol of resistance. The Renaissance brought new art and ideas, while religious conflict between Catholics and Protestants culminated in the Wars of Religion. In 1598, Henry IV’s Edict of Nantes offered limited toleration, later revoked under Louis XIV, the “Sun King,” who centralized power at Versailles.
+        </p>
+        <p>
+          Fiscal strain and social inequality helped ignite the French Revolution in 1789, toppling the old regime and spreading ideals of citizenship and rights. Napoleon Bonaparte rose from the upheaval, reshaping Europe through conquest and legal reform, notably the Napoleonic Code. The 19th century saw repeated shifts between empire, monarchy, and republic, alongside industrialization and colonial expansion. In the 20th century, France endured two world wars, occupation during World War II, and then reconstruction. Decolonization and the creation of the Fifth Republic in 1958 redefined the state. The upheavals of 1968, economic modernization, and the building of the European Union further transformed society and politics, while debates over identity and immigration continue to shape public life. Today, France is a democratic nation influential in European integration, culture, and global diplomacy.
+        </p>
+      </section>
+
+      <section id="highlights" class="grid">
+        <article class="mini">
+          <h3>Key eras</h3>
+          <ul>
+            <li>Roman Gaul and Latin roots</li>
+            <li>Frankish kings and Charlemagne</li>
+            <li>Capetians and medieval expansion</li>
+            <li>Revolution and Napoleonic reforms</li>
+            <li>World wars and the Fifth Republic</li>
+          </ul>
+        </article>
+        <article class="mini">
+          <h3>Enduring ideas</h3>
+          <ul>
+            <li>Centralized state institutions</li>
+            <li>Citizenship and secular republicanism</li>
+            <li>Law and rights traditions</li>
+            <li>Art, language, and diplomacy</li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="visit" class="card">
+        <h2>Want more?</h2>
+        <p>
+          Turn this into a fuller guide by adding sections on regions, museums, and a timeline.
+          You can also swap in your own hero photo and update the colors to match a brand.
+        </p>
+        <div class="actions">
+          <a class="btn" href="#">Back to top</a>
+          <a class="btn outline" href="#history">Re-read overview</a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>Built as a simple static landing page. © <span id="year"></span></p>
+      </footer>
+    </main>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

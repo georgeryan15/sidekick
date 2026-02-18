@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
 } from "@heroui/react";
+import ThinkingIndicator from "../components/ThinkingIndicator";
 import {
   ArrowUp,
   At,
@@ -36,6 +37,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [statusLines, setStatusLines] = useState<string[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const assistantContentRef = useRef("");
@@ -70,8 +72,11 @@ export default function Home() {
           setMessages((prev) =>
             prev.map((m) => (m.id === id ? { ...m, content } : m))
           );
+        } else if (msg.type === "status") {
+          setStatusLines((prev) => [...prev, msg.content].slice(-3));
         } else if (msg.type === "done") {
           setIsLoading(false);
+          setStatusLines([]);
         } else if (msg.type === "error") {
           const id = assistantIdRef.current;
           setMessages((prev) =>
@@ -82,6 +87,7 @@ export default function Home() {
             )
           );
           setIsLoading(false);
+          setStatusLines([]);
         } else if (msg.type === "tool_call") {
           let result: string;
           try {
@@ -203,13 +209,8 @@ export default function Home() {
               </div>
             ))}
 
-            {isLoading && (
-              <div className="flex gap-2 items-center">
-                <Avatar size="sm">
-                  <Avatar.Fallback>AI</Avatar.Fallback>
-                </Avatar>
-                <Spinner size="sm" />
-              </div>
+            {isLoading && !assistantContentRef.current && (
+              <ThinkingIndicator statusLines={statusLines} />
             )}
 
             <div ref={bottomRef} />
