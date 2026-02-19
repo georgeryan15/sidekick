@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Button, Chip } from "@heroui/react";
+import { Avatar, Button, SearchField } from "@heroui/react";
 
 // --- Types ---
 
@@ -26,28 +26,6 @@ interface Skill {
 }
 
 // --- Mock Data ---
-
-const categories: SkillCategory[] = [
-  "All Skills",
-  "Communication",
-  "CRM",
-  "Development",
-  "Analytics",
-  "Productivity",
-  "Marketing",
-  "Support",
-];
-
-const categoryIcons: Record<SkillCategory, string> = {
-  "All Skills": "🔲",
-  Communication: "💬",
-  CRM: "👥",
-  Development: "🛠",
-  Analytics: "📊",
-  Productivity: "⚡",
-  Marketing: "📣",
-  Support: "🎧",
-};
 
 const mockSkills: Skill[] = [
   {
@@ -244,37 +222,29 @@ const mockSkills: Skill[] = [
 // --- Main Page ---
 
 export default function Skills() {
-  const [activeCategory, setActiveCategory] =
-    useState<SkillCategory>("All Skills");
+  const [query, setQuery] = useState("");
 
-  const filteredSkills =
-    activeCategory === "All Skills"
-      ? mockSkills
-      : mockSkills.filter((s) => s.category === activeCategory);
-
-  const categoryLabel =
-    activeCategory === "All Skills" ? "Top Skills" : activeCategory;
+  const filteredSkills = query
+    ? mockSkills.filter(
+        (s) =>
+          s.name.toLowerCase().includes(query.toLowerCase()) ||
+          s.subtitle.toLowerCase().includes(query.toLowerCase()) ||
+          s.author.toLowerCase().includes(query.toLowerCase())
+      )
+    : mockSkills;
 
   return (
     <div className="flex flex-col gap-6 p-6 h-full overflow-auto">
-      {/* Category Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {categories.map((cat) => (
-          <Button
-            key={cat}
-            size="sm"
-            variant={activeCategory === cat ? "secondary" : "ghost"}
-            onPress={() => setActiveCategory(cat)}
-            className="rounded-full whitespace-nowrap"
-          >
-            <span className="text-base">{categoryIcons[cat]}</span>
-            {cat}
-          </Button>
-        ))}
+      {/* Search bar */}
+      <div className="flex justify-end">
+        <SearchField value={query} onChange={setQuery}>
+          <SearchField.Group>
+            <SearchField.SearchIcon />
+            <SearchField.Input className="w-[240px]" placeholder="Search skills..." />
+            <SearchField.ClearButton />
+          </SearchField.Group>
+        </SearchField>
       </div>
-
-      {/* Section Title */}
-      <h2 className="text-xl font-semibold">{categoryLabel}</h2>
 
       {/* Skills Grid - 2 columns, 3 rows like App Store */}
       <div className="grid grid-cols-2 gap-x-8">
@@ -282,9 +252,7 @@ export default function Skills() {
           <div
             key={skill.id}
             className={`flex items-center gap-4 py-4 ${
-              index < filteredSkills.length - 2
-                ? "border-b border-neutral-100"
-                : ""
+              index < filteredSkills.length - 2 ? "border-b border-neutral-100" : ""
             }`}
           >
             {/* Icon */}

@@ -17,6 +17,7 @@ Thumbs.db
 *.swo
 *.sublime-workspace
 *.sublime-project
+.mcp.json
 
 # Logs
 logs/
@@ -36,3 +37,6 @@ coverage/
 # Misc
 *.local
 .cache/
+
+# Demo Files
+demo-files/

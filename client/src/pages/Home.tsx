@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Markdown from "react-markdown";
 import {
   Button,
@@ -11,6 +12,9 @@ import {
   Tooltip,
 } from "@heroui/react";
 import ThinkingIndicator from "../components/ThinkingIndicator";
+import { useAuth } from "../context/AuthContext";
+import { useConversationContext } from "../context/ConversationContext";
+import { supabase } from "../lib/supabase";
 import {
   ArrowUp,
   At,
@@ -28,12 +32,17 @@ declare global {
 }
 
 interface Message {
-  id: number;
+  id: string;
   role: "user" | "assistant";
   content: string;
 }
 
 export default function Home() {
+  const { conversationId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { refresh: refreshConversations } = useConversationContext();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +50,51 @@ export default function Home() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const assistantContentRef = useRef("");
-  const assistantIdRef = useRef(0);
+  const assistantIdRef = useRef("");
+  const currentConvIdRef = useRef<string | null>(conversationId ?? null);
+
+  // Keep ref in sync with URL param
+  useEffect(() => {
+    currentConvIdRef.current = conversationId ?? null;
+  }, [conversationId]);
+
+  // Load history when conversationId changes
+  useEffect(() => {
+    if (!conversationId) {
+      setMessages([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadHistory() {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("id, role, content")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true });
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error("Failed to load messages:", error.message);
+        return;
+      }
+
+      setMessages(
+        (data ?? []).map((m) => ({
+          id: m.id,
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        }))
+      );
+    }
+
+    loadHistory();
+    return () => {
+      cancelled = true;
+    };
+  }, [conversationId]);
 
   const getOrCreateSocket = useCallback((): Promise<WebSocket> => {
     return new Promise((resolve, reject) => {
@@ -74,9 +127,15 @@ export default function Home() {
           );
         } else if (msg.type === "status") {
           setStatusLines((prev) => [...prev, msg.content].slice(-3));
+        } else if (msg.type === "conversation_created") {
+          currentConvIdRef.current = msg.id;
+          navigate(`/c/${msg.id}`, { replace: true });
+        } else if (msg.type === "title_updated") {
+          refreshConversations();
         } else if (msg.type === "done") {
           setIsLoading(false);
           setStatusLines([]);
+          refreshConversations();
         } else if (msg.type === "error") {
           const id = assistantIdRef.current;
           setMessages((prev) =>
@@ -107,7 +166,7 @@ export default function Home() {
         if (wsRef.current === ws) wsRef.current = null;
       };
     });
-  }, []);
+  }, [navigate, refreshConversations]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -118,7 +177,7 @@ export default function Home() {
     if (!text || isLoading) return;
 
     const userMessage: Message = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       role: "user",
       content: text,
     };
@@ -128,7 +187,7 @@ export default function Home() {
     setIsLoading(true);
 
     const assistantMessage: Message = {
-      id: Date.now() + 1,
+      id: crypto.randomUUID(),
       role: "assistant",
       content: "",
     };
@@ -146,6 +205,8 @@ export default function Home() {
             role: m.role,
             content: m.content,
           })),
+          userId: user?.id,
+          conversationId: currentConvIdRef.current,
         })
       );
     } catch (err) {

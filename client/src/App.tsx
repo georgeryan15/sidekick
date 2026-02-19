@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import SidebarNav from "./components/SidebarNav";
 import Login from "./pages/Login";
 import { useAuth } from "./context/AuthContext";
+import { ConversationProvider } from "./context/ConversationContext";
 import { Spinner } from "@heroui/react";
 
 function App() {
@@ -42,14 +43,18 @@ function App() {
   }
 
   return (
-    <div
-      className={`flex h-screen bg-surface-secondary p-3 gap-2 ${!showApp ? "auth-enter" : ""}`}
-    >
-      <SidebarNav />
-      <div className="flex-1 rounded-2xl overflow-hidden">
-        <Outlet />
+    <ConversationProvider>
+      <div
+        className={`flex h-screen bg-[#f5f5f5] p-3 gap-2 ${
+          !showApp ? "auth-enter" : ""
+        }`}
+      >
+        <SidebarNav />
+        <div className="flex-1 rounded-2xl overflow-hidden">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </ConversationProvider>
   );
 }
 

@@ -3,6 +3,11 @@ import { Server } from "http";
 import { run, user, assistant } from "@openai/agents";
 import { agent } from "./agent";
 import crypto from "crypto";
+import {
+  createConversation,
+  saveMessage,
+  updateConversationTitle,
+} from "./lib/conversations";
 
 let clientSocket: WebSocket | null = null;
 
@@ -37,7 +42,7 @@ export function setupWebSocket(server: Server) {
       }
 
       if (msg.type === "chat") {
-        await handleChat(ws, msg.messages);
+        await handleChat(ws, msg.messages, msg.userId, msg.conversationId);
         return;
       }
     });
@@ -72,11 +77,38 @@ function summarizeToolArgs(argsJson?: string): string | null {
 
 async function handleChat(
   ws: WebSocket,
-  messages: { role: string; content: string }[]
+  messages: { role: string; content: string }[],
+  userId?: string,
+  conversationId?: string | null
 ) {
+  let convId = conversationId || null;
+  const isNewConversation = !convId;
+
+  // Create conversation if needed
+  if (!convId && userId) {
+    try {
+      convId = await createConversation(userId);
+      ws.send(JSON.stringify({ type: "conversation_created", id: convId }));
+    } catch (err) {
+      console.error("Failed to create conversation:", err);
+    }
+  }
+
+  // Save the last user message
+  const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+  if (convId && lastUserMsg) {
+    try {
+      await saveMessage(convId, "user", lastUserMsg.content);
+    } catch (err) {
+      console.error("Failed to save user message:", err);
+    }
+  }
+
   const input = messages.map((msg) =>
     msg.role === "user" ? user(msg.content) : assistant(msg.content)
   );
+
+  let fullAssistantText = "";
 
   try {
     const result = await run(agent, input, { stream: true });
@@ -86,6 +118,7 @@ async function handleChat(
 
       if (event.type === "raw_model_stream_event") {
         if (event.data.type === "output_text_delta") {
+          fullAssistantText += event.data.delta;
           ws.send(JSON.stringify({ type: "text", content: event.data.delta }));
         }
       } else if (event.type === "run_item_stream_event") {
@@ -129,8 +162,36 @@ async function handleChat(
       }
     }
 
+    // Save assistant message
+    if (convId && fullAssistantText) {
+      try {
+        await saveMessage(convId, "assistant", fullAssistantText);
+      } catch (err) {
+        console.error("Failed to save assistant message:", err);
+      }
+    }
+
+    // Auto-title for new conversations
+    if (isNewConversation && convId && lastUserMsg) {
+      const title = lastUserMsg.content.replace(/\n/g, " ").trim().slice(0, 60);
+      try {
+        await updateConversationTitle(convId, title);
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(
+            JSON.stringify({
+              type: "title_updated",
+              conversationId: convId,
+              title,
+            })
+          );
+        }
+      } catch (err) {
+        console.error("Failed to auto-title conversation:", err);
+      }
+    }
+
     if (ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: "done" }));
+      ws.send(JSON.stringify({ type: "done", conversationId: convId }));
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
