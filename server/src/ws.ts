@@ -9,7 +9,8 @@ import {
   updateConversationTitle,
 } from "./lib/conversations";
 
-let clientSocket: WebSocket | null = null;
+const clientSockets = new Set<WebSocket>();
+let activeSocket: WebSocket | null = null;
 
 const pendingExecs = new Map<
   string,
@@ -21,7 +22,7 @@ export function setupWebSocket(server: Server) {
 
   wss.on("connection", (ws) => {
     console.log("Client connected");
-    clientSocket = ws;
+    clientSockets.add(ws);
 
     ws.on("message", async (raw) => {
       let msg: any;
@@ -49,7 +50,8 @@ export function setupWebSocket(server: Server) {
 
     ws.on("close", () => {
       console.log("Client disconnected");
-      if (clientSocket === ws) clientSocket = null;
+      clientSockets.delete(ws);
+      if (activeSocket === ws) activeSocket = null;
     });
   });
 }
@@ -111,6 +113,7 @@ async function handleChat(
   let fullAssistantText = "";
 
   try {
+    activeSocket = ws;
     const result = await run(agent, input, { stream: true });
 
     for await (const event of result) {
@@ -193,18 +196,21 @@ async function handleChat(
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "done", conversationId: convId }));
     }
+    activeSocket = null;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Agent error:", message);
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "error", content: message }));
     }
+    activeSocket = null;
   }
 }
 
 export function requestClientExec(command: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    if (!clientSocket || clientSocket.readyState !== WebSocket.OPEN) {
+    const socket = activeSocket;
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       resolve("Error: No client connected to execute commands.");
       return;
     }
@@ -218,7 +224,7 @@ export function requestClientExec(command: string): Promise<string> {
 
     pendingExecs.set(id, { resolve, timer });
 
-    clientSocket.send(
+    socket.send(
       JSON.stringify({ type: "tool_call", id, command })
     );
   });

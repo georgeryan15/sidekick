@@ -1,5 +1,5 @@
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { Avatar, Dropdown, Label, ListBox, Separator, Spinner } from "@heroui/react";
+import { Avatar, Button, Dropdown, Label, ListBox, Separator, Spinner } from "@heroui/react";
 import type { Selection } from "@heroui/react";
 import {
   ArrowRightFromSquare,
@@ -9,9 +9,11 @@ import {
   FaceRobot,
   Sparkles,
   Plus,
+  TrashBin,
 } from "@gravity-ui/icons";
 import { useAuth } from "../context/AuthContext";
 import { useConversationContext } from "../context/ConversationContext";
+import ContextMenu from "./ContextMenu";
 
 const menuItems = [
   { id: "home", label: "Home", path: "/", icon: House },
@@ -25,7 +27,8 @@ function SidebarNav() {
   const location = useLocation();
   const { conversationId } = useParams();
   const { user, signOut } = useAuth();
-  const { conversations, isLoading } = useConversationContext();
+  const { conversations, isLoading, deleteConversation } =
+    useConversationContext();
 
   const fullName = user?.user_metadata?.full_name ?? "User";
   const email = user?.email ?? "";
@@ -96,17 +99,32 @@ function SidebarNav() {
 
         <div className="flex flex-col gap-0.5">
           {conversations.map((conv) => (
-            <button
+            <ContextMenu
               key={conv.id}
-              onClick={() => navigate(`/c/${conv.id}`)}
-              className={`w-full text-left rounded-full px-3 py-1 text-sm truncate transition-colors ${
-                conversationId === conv.id
-                  ? "bg-neutral-100 font-medium"
-                  : "hover:bg-neutral-50 text-neutral-600"
-              }`}
+              context={conv.id}
+              items={[
+                { id: "delete", label: "Delete", variant: "danger", icon: <TrashBin className="size-4 shrink-0 text-danger" /> },
+              ]}
+              onAction={(_key, convId) => {
+                const id = convId as string;
+                // Navigate away if the user is viewing this conversation
+                if (conversationId === id) {
+                  navigate("/");
+                }
+                deleteConversation(id);
+              }}
             >
-              {conv.title}
-            </button>
+              <button
+                onClick={() => navigate(`/c/${conv.id}`)}
+                className={`w-full text-left rounded-full px-3 py-1 text-sm truncate transition-colors ${
+                  conversationId === conv.id
+                    ? "bg-neutral-100 font-medium"
+                    : "hover:bg-neutral-50 text-neutral-600"
+                }`}
+              >
+                {conv.title}
+              </button>
+            </ContextMenu>
           ))}
         </div>
       </div>
@@ -120,6 +138,16 @@ function SidebarNav() {
           <Plus className="size-3.5" />
           New Chat
         </button>
+      </div>
+
+      <div className="px-1 pt-1">
+        <Button
+          className="w-full rounded-full"
+          variant="secondary"
+          onPress={() => window.electronAPI?.toggleOverlay()}
+        >
+          Test Feature
+        </Button>
       </div>
 
       <Separator className="my-2" />

@@ -32,5 +32,25 @@ export function useConversations(userId: string | undefined) {
     refresh();
   }, [refresh]);
 
-  return { conversations, isLoading, refresh };
+  const deleteConversation = useCallback(async (id: string) => {
+    // Optimistically remove from local state
+    setConversations((prev) => prev.filter((c) => c.id !== id));
+
+    try {
+      const res = await fetch(`http://localhost:3001/conversations/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        console.error("Failed to delete conversation:", res.statusText);
+        // Re-fetch to restore accurate state
+        refresh();
+      }
+    } catch (err) {
+      console.error("Failed to delete conversation:", err);
+      refresh();
+    }
+  }, [refresh]);
+
+  return { conversations, isLoading, refresh, deleteConversation };
 }

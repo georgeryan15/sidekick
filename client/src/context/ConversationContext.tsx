@@ -9,6 +9,7 @@ interface ConversationContextValue {
   conversations: Conversation[];
   isLoading: boolean;
   refresh: () => Promise<void>;
+  deleteConversation: (id: string) => Promise<void>;
 }
 
 const ConversationContext = createContext<ConversationContextValue | undefined>(
@@ -21,10 +22,13 @@ export function ConversationProvider({
   children: React.ReactNode;
 }) {
   const { user } = useAuth();
-  const { conversations, isLoading, refresh } = useConversations(user?.id);
+  const { conversations, isLoading, refresh, deleteConversation } =
+    useConversations(user?.id);
 
   return (
-    <ConversationContext.Provider value={{ conversations, isLoading, refresh }}>
+    <ConversationContext.Provider
+      value={{ conversations, isLoading, refresh, deleteConversation }}
+    >
       {children}
     </ConversationContext.Provider>
   );

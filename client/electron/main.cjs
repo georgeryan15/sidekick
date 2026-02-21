@@ -1,11 +1,14 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const path = require("path");
 const { exec } = require("child_process");
 
 const isDev = !app.isPackaged;
 
+let mainWindow = null;
+let overlayWindow = null;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
@@ -16,11 +19,72 @@ function createWindow() {
   });
 
   if (isDev) {
-    win.loadURL("http://localhost:5173");
+    mainWindow.loadURL("http://localhost:5173");
   } else {
-    win.loadFile(path.join(__dirname, "..", "dist", "index.html"));
+    mainWindow.loadFile(path.join(__dirname, "..", "dist", "index.html"));
   }
 }
+
+function createOverlayWindow() {
+  const { width: screenWidth, height: screenHeight } =
+    screen.getPrimaryDisplay().workAreaSize;
+
+  overlayWindow = new BrowserWindow({
+    width: 500,
+    height: 52,
+    x: Math.round((screenWidth - 500) / 2),
+    y: screenHeight - 52 - 24,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    show: false,
+    hasShadow: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+
+  if (isDev) {
+    overlayWindow.loadURL("http://localhost:5173/#/overlay");
+  } else {
+    overlayWindow.loadFile(path.join(__dirname, "..", "dist", "index.html"), {
+      hash: "/overlay",
+    });
+  }
+}
+
+// IPC: toggle between main and overlay
+ipcMain.handle("overlay:toggle", () => {
+  if (!mainWindow || !overlayWindow) return;
+
+  if (mainWindow.isVisible()) {
+    mainWindow.hide();
+    overlayWindow.show();
+  } else {
+    overlayWindow.hide();
+    mainWindow.show();
+  }
+});
+
+// IPC: resize overlay (keep bottom-anchored)
+ipcMain.handle("overlay:resize", (_event, height) => {
+  if (!overlayWindow) return;
+
+  const { width: screenWidth, height: screenHeight } =
+    screen.getPrimaryDisplay().workAreaSize;
+
+  const newY = screenHeight - height - 24;
+  overlayWindow.setBounds({
+    x: Math.round((screenWidth - 500) / 2),
+    y: newY,
+    width: 500,
+    height,
+  });
+});
 
 ipcMain.handle("exec:run", (_event, command) => {
   return new Promise((resolve) => {
@@ -34,7 +98,10 @@ ipcMain.handle("exec:run", (_event, command) => {
   });
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  createOverlayWindow();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

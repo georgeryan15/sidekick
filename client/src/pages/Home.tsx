@@ -23,14 +23,6 @@ import {
   Plus,
 } from "@gravity-ui/icons";
 
-declare global {
-  interface Window {
-    electronAPI?: {
-      execCommand: (command: string) => Promise<string>;
-    };
-  }
-}
-
 interface Message {
   id: string;
   role: "user" | "assistant";

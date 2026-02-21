@@ -34,6 +34,35 @@ export async function saveMessage(
     console.error("Failed to bump updated_at:", updateError.message);
 }
 
+export async function deleteConversation(id: string): Promise<void> {
+  const { data: msgData, error: msgErr } = await supabase
+    .from("messages")
+    .delete()
+    .eq("conversation_id", id)
+    .select("id");
+
+  console.log(`Delete messages for conversation ${id}:`, {
+    deleted: msgData?.length ?? 0,
+    error: msgErr?.message ?? null,
+  });
+
+  if (msgErr) throw new Error(`Failed to delete messages: ${msgErr.message}`);
+
+  const { data: convData, error: convErr } = await supabase
+    .from("conversations")
+    .delete()
+    .eq("id", id)
+    .select("id");
+
+  console.log(`Delete conversation ${id}:`, {
+    deleted: convData?.length ?? 0,
+    error: convErr?.message ?? null,
+  });
+
+  if (convErr)
+    throw new Error(`Failed to delete conversation: ${convErr.message}`);
+}
+
 export async function updateConversationTitle(
   id: string,
   title: string
