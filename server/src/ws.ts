@@ -211,7 +211,7 @@ export function requestClientExec(command: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const socket = activeSocket;
     if (!socket || socket.readyState !== WebSocket.OPEN) {
-      resolve("Error: No client connected to execute commands.");
+      resolve("Your device is not connected. This action requires access to your local machine.");
       return;
     }
 
@@ -225,7 +225,7 @@ export function requestClientExec(command: string): Promise<string> {
     pendingExecs.set(id, { resolve, timer });
 
     socket.send(
-      JSON.stringify({ type: "tool_call", id, command })
+      JSON.stringify({ type: "local_exec", id, command })
     );
   });
 }

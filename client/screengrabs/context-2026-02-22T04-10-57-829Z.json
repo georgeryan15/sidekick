@@ -1,0 +1,108 @@
+{
+  "frontmostApp": "Terminal",
+  "bundleId": "com.apple.Terminal",
+  "windowTitle": "Sidekick — ✳ Window Text Display — node ◂ claude — 58×55",
+  "focusedElement": {
+    "role": "",
+    "value": "",
+    "description": ""
+  },
+  "selectedText": "",
+  "browserURL": "",
+  "windowContent": [
+    {
+      "role": "AXWindow",
+      "title": "Sidekick — ✳ Window Text Display — node ◂ claude — 58×55"
+    },
+    {
+      "role": "AXWindow",
+      "description": "standard window"
+    },
+    {
+      "role": "AXSplitGroup",
+      "description": "split group"
+    },
+    {
+      "role": "AXScrollArea",
+      "description": "scroll area"
+    },
+    {
+      "role": "AXTextArea",
+      "text": "i\n          +ldren[i], depth + 1, maxDepth);         \n      182 +        for (var j = 0; j < childTexts.l\n          +ength; j++) {                           \n      183 +          texts.push(childTexts[j]);    \n      184 +        }                               \n      185 +        // Cap total items to prevent ru\n          +naway                                   \n      186 +        if (texts.length > 500) break;  \n      187 +      }                                 \n      188 +    } catch(e) {}                       \n      189 +  } catch(e) {}                         \n      190 +  return texts;                         \n      191 +}                                       \n      192 +                                        \n      193 +var windowContent = [];                 \n      194 +try {                                   \n      195 +  var win = frontApp.windows[0];        \n      196 +  windowContent = extractText(win, 0, 6)\n          +;                                       \n      197 +} catch(e) {}                           \n      198 +                                        \n      199  var visibleWindows = [];\n      200  var procs = se.applicationProcesses.whos\n           e({visible: true})();\n      201  for (var i = 0; i < procs.length; i++) {\n     ...\n      215    focusedElement: { role: focusedRole, v\n           alue: focusedValue, description: focused\n           Desc },\n      216    selectedText: selectedText,\n      217    browserURL: browserURL,\n      218 +  windowContent: windowContent,         \n      219    visibleWindows: visibleWindows\n      220  });\n      221  `;\n\n⏺ Now bump the timeout since the tree walk can take a few\n  seconds on heavy apps:\n\n⏺ Update(client/electron/main.cjs)\n  ⎿  Added 1 line, removed 1 line\n      226    return new Promise((resolve) => {\n      227      exec(\n      228        `osascript -l JavaScript \"${tmpFil\n           e}\"`,\n      229 -      { timeout: 10_000 },              \n      229 +      { timeout: 15_000 },              \n      230        (error, stdout, stderr) => {\n      231          // Clean up temp file\n      232          try { fs.unlinkSync(tmpFile); }\n           catch {}\n\n\n\n⏺ Let me do a quick test to make sure the tree walk works:\n\n⏺ Bash(cat > /tmp/sidekick-tree-test.js << 'JXAEOF'\n      var se = Application(\"System Events\");…)\n  ⎿  [\n       {\n         \"role\": \"AXWindow\",\n     … +30 lines (ctrl+o to expand)\n\n⏺ Works. Notice for Terminal the AXTextArea has the shell\n  role but didn't emit text — that's because Terminal's\n  text content is very large. Let me tweak the filter to\n  also capture text areas that have content but skip the\n  length check for the role-based collection, and just\n  truncate long values:\n\n⏺ Update(client/electron/main.cjs)\n  ⎿  Added 5 lines, removed 3 lines\n      160  \n      161      // Collect meaningful text from this\n            element\n      162      var roleStr = role || \"\";\n      163 -    if (val && val !== \"undefined\" && va\n          -l !== \"null\" && val.length > 0 && val.le\n          -ngth < 50000) {                         \n      163 +    if (val && val !== \"undefined\" && va\n          +l !== \"null\" && val.length > 0) {       \n      164        // For text areas / text fields, g\n           rab the value (this is the main content)\n      165 -      if (roleStr === \"AXTextArea\" || ro\n          -leStr === \"AXTextField\" || roleStr === \"\n          -AXStaticText\" || roleStr === \"AXTextArea\n          -\") {                                    \n      166 -        texts.push({ role: roleStr, text\n          -: val });                               \n      165 +      if (roleStr === \"AXTextArea\" || ro\n          +leStr === \"AXTextField\" || roleStr === \"\n          +AXStaticText\") {                        \n      166 +        // Truncate very long values but\n          + keep enough to be useful               \n      167 +        var trimmed = val.length > 5000 \n          +? val.substring(val.length - 5000) : val\n          +;                                       \n      168 +        texts.push({ role: roleStr, text\n          +: trimmed });                           \n      169        }\n      170      }\n      171      if (title && title !== val) {\n\n⏺ Restart Electron and test again. The new windowContent\n  array in the JSON will contain:\n\n  - Native apps (Terminal, TextEdit, Safari): Full text\n  content from text areas, button labels, menu items\n  - Electron apps (Cursor, VS Code): Limited — mostly\n  window/toolbar titles and button descriptions. The\n  actual editor content lives inside a Chromium webview\n  that doesn't expose to the AX tree well\n\n  For Electron apps specifically, the AX tree will give\n  you the toolbar/sidebar structure but not editor text.\n  That's where your Tier 3 screenshot fallback will matter\n   most.\n\n✻ Sautéed for 59s\n\n──────────────────────────────────────────────────────────\n❯ test it on a native app like TextEdit or Safari\n──────────────────────────────────────────────────────────\n  ⏵⏵ accept edits on (shift+tab to cycle)\n\n"
+    },
+    {
+      "role": "AXTextArea",
+      "description": "shell"
+    },
+    {
+      "role": "AXScrollBar",
+      "description": "scroll bar"
+    },
+    {
+      "role": "AXValueIndicator",
+      "description": "value indicator"
+    },
+    {
+      "role": "AXButton",
+      "description": "increment arrow button"
+    },
+    {
+      "role": "AXButton",
+      "description": "decrement arrow button"
+    },
+    {
+      "role": "AXButton",
+      "description": "increment page button"
+    },
+    {
+      "role": "AXButton",
+      "description": "decrement page button"
+    },
+    {
+      "role": "AXButton",
+      "description": "close button"
+    },
+    {
+      "role": "AXButton",
+      "description": "full screen button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXButton",
+      "description": "minimise button"
+    },
+    {
+      "role": "AXImage",
+      "title": "Macintosh HD"
+    },
+    {
+      "role": "AXImage",
+      "description": "folder"
+    },
+    {
+      "role": "AXStaticText",
+      "text": "Sidekick — ✳ Window Text Display — node ◂ claude — 58×55"
+    }
+  ],
+  "visibleWindows": [
+    "Finder | _Projects",
+    "Google Chrome | New tab - Google Chrome",
+    "Google Chrome | OpenEvidence - Google Chrome",
+    "Terminal | Sidekick — ✳ Window Text Display — node ◂ claude — 58×55",
+    "ChatGPT | ChatGPT",
+    "Cursor | context-2026-02-22T04-10-25-027Z.json — Sidekick",
+    "Microsoft Word | Document4",
+    "Claude | Claude",
+    "Spotify | Spotify Premium",
+    "Discord | EVERYONE CAN SPEAK | Martin Shkreli Discord",
+    "Electron | client"
+  ],
+  "timestamp": "2026-02-22T04:10:57.829Z"
+}

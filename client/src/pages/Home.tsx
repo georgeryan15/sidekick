@@ -10,6 +10,9 @@ import {
   Spinner,
   TextField,
   Tooltip,
+  Select,
+  ListBox,
+  Label,
 } from "@heroui/react";
 import ThinkingIndicator from "../components/ThinkingIndicator";
 import { useAuth } from "../context/AuthContext";
@@ -139,16 +142,19 @@ export default function Home() {
           );
           setIsLoading(false);
           setStatusLines([]);
-        } else if (msg.type === "tool_call") {
+        } else if (msg.type === "local_exec") {
           let result: string;
           try {
             if (window.electronAPI) {
               result = await window.electronAPI.execCommand(msg.command);
             } else {
-              result = "Error: Not running in Electron — cannot execute commands.";
+              result =
+                "Error: Not running in Electron — cannot execute commands.";
             }
           } catch (err) {
-            result = `Error: ${err instanceof Error ? err.message : String(err)}`;
+            result = `Error: ${
+              err instanceof Error ? err.message : String(err)
+            }`;
           }
           ws.send(JSON.stringify({ type: "tool_result", id: msg.id, result }));
         }
@@ -306,19 +312,32 @@ export default function Home() {
                 <p className="text-xs">Add files and more</p>
               </Tooltip.Content>
             </Tooltip>
-            <Tooltip delay={0}>
-              <Button
-                isIconOnly
-                aria-label="Connect Apps"
-                size="sm"
-                variant="tertiary"
-              >
-                <PlugConnection />
-              </Button>
-              <Tooltip.Content>
-                <p className="text-xs">Connect apps</p>
-              </Tooltip.Content>
-            </Tooltip>
+            <Select placeholder="GPT-5.2">
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>
+                  <ListBox.Item id="florida" textValue="Florida">
+                    GPT-5.2
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item id="delaware" textValue="Delaware">
+                    Opus 4.6
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item id="california" textValue="California">
+                    Sonnet 4.6
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                  <ListBox.Item id="texas" textValue="Texas">
+                    Gemini 3 Pro
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                </ListBox>
+              </Select.Popover>
+            </Select>
             <div className="ml-auto flex items-center gap-1.5">
               <Tooltip delay={0}>
                 <Button

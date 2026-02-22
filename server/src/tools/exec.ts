@@ -1,17 +1,26 @@
 import { tool } from "@openai/agents";
 import { z } from "zod";
-import { requestClientExec } from "../ws";
+import { exec as cpExec } from "child_process";
 
 export const execTool = tool({
   name: "exec",
   description:
-    "Execute any shell command on the host machine. You have full access to run any command (e.g. ping, curl, ls, cat, npm, git, etc.).",
+    "Execute a shell command on the server. Use for API calls, skill scripts, and anything that doesn't need the user's local machine.",
   parameters: z.object({
     command: z
       .string()
-      .describe("The shell command to run (e.g. 'ping -c 4 google.com', 'ls -la', 'curl https://example.com')"),
+      .describe("The shell command to run on the server"),
   }),
   execute: async ({ command }) => {
-    return requestClientExec(command);
+    console.log(`[exec] ${command}`);
+    return new Promise<string>((resolve) => {
+      cpExec(command, { timeout: 30_000 }, (error, stdout, stderr) => {
+        if (error) {
+          resolve(`Error: ${error.message}\n${stderr}`.trim());
+          return;
+        }
+        resolve(stdout || stderr || "(no output)");
+      });
+    });
   },
 });

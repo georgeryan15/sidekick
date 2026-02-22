@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Button, Input, ScrollShadow } from "@heroui/react";
+import { Button, Input, Kbd, ScrollShadow } from "@heroui/react";
 import {
   ArrowUp,
   BookOpen,
   ChevronsExpandUpRight,
   ChevronsCollapseUpRight,
+  Sparkles,
+  Eye,
 } from "@gravity-ui/icons";
 import Markdown from "react-markdown";
 import WidgetChip from "../components/overlay/WidgetChip";
@@ -13,16 +15,19 @@ import { useAuth } from "../context/AuthContext";
 
 const COLLAPSED_HEIGHT = 52;
 const MAX_EXPANDED_HEIGHT = 400;
+const SUGGESTION_PROMPT = "Summarize my recent activity";
 
 export default function OverlayChatbar() {
   const { user } = useAuth();
 
   const [expanded, setExpanded] = useState(false);
   const [input, setInput] = useState("");
+  const [suggestion, setSuggestion] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [statusLines, setStatusLines] = useState<string[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
@@ -165,8 +170,37 @@ export default function OverlayChatbar() {
     window.electronAPI?.toggleOverlay();
   };
 
+  const handleToggleSuggestion = () => {
+    if (suggestion) {
+      setSuggestion(false);
+    } else {
+      setSuggestion(true);
+      setInput("");
+    }
+  };
+
+  const handleScanScreen = () => {
+    if (isScanning) return;
+    setIsScanning(true);
+
+    setTimeout(async () => {
+      try {
+        const result = await window.electronAPI?.captureScreenContext();
+        console.log("[ScreenScan]", result?.success ? "Saved" : "Failed", result?.file, result?.data);
+      } catch (err) {
+        console.error("[ScreenScan] Error:", err);
+      } finally {
+        setIsScanning(false);
+      }
+    }, 5000);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Tab" && suggestion && !input) {
+      e.preventDefault();
+      setInput(SUGGESTION_PROMPT);
+      setSuggestion(false);
+    } else if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
@@ -243,15 +277,30 @@ export default function OverlayChatbar() {
       className="flex items-center h-full bg-white/95 backdrop-blur-xl rounded-full shadow-lg border border-neutral-200/60 px-3 gap-2"
       style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
     >
-      <Input
-        aria-label="Ask anything"
-        placeholder="Ask anything..."
-        className="flex-1 rounded-full text-sm"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        variant="secondary"
-      />
+      <div className="relative flex-1 flex items-center">
+        <Input
+          aria-label="Ask anything"
+          placeholder={suggestion ? "" : "Ask anything..."}
+          className="flex-1 rounded-full text-sm"
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            if (suggestion && e.target.value) setSuggestion(false);
+          }}
+          onKeyDown={handleKeyDown}
+          variant="secondary"
+        />
+        {suggestion && !input && (
+          <div className="absolute inset-y-0 left-3 flex items-center gap-1.5 pointer-events-none">
+            <span className="text-sm text-neutral-400 truncate">
+              {SUGGESTION_PROMPT}
+            </span>
+            <Kbd className="h-5 rounded px-1.5 text-[10px] bg-neutral-300/50 text-neutral-500 shrink-0">
+              ⌘K
+            </Kbd>
+          </div>
+        )}
+      </div>
       <Button
         isIconOnly
         size="sm"
@@ -269,6 +318,25 @@ export default function OverlayChatbar() {
         onPress={handleExpandToApp}
       >
         <ChevronsExpandUpRight className="size-4" />
+      </Button>
+      <Button
+        isIconOnly
+        size="sm"
+        variant="ghost"
+        aria-label="Suggest prompt"
+        onPress={handleToggleSuggestion}
+      >
+        <Sparkles className="size-4" />
+      </Button>
+      <Button
+        isIconOnly
+        size="sm"
+        variant="ghost"
+        aria-label="Scan screen"
+        onPress={handleScanScreen}
+        isPending={isScanning}
+      >
+        <Eye className="size-4" />
       </Button>
     </div>
   );

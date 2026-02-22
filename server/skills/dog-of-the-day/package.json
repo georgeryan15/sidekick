@@ -1,0 +1,11 @@
+{
+  "name": "sidekick-dog-of-the-day-skill",
+  "version": "1.0.0",
+  "description": "Returns today's featured dog",
+  "main": "scripts/dog-cli.js",
+  "scripts": {
+    "dog": "node scripts/dog-cli.js",
+    "help": "node scripts/dog-cli.js help"
+  },
+  "dependencies": {}
+}

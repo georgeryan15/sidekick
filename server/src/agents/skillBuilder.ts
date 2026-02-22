@@ -28,9 +28,8 @@ Each skill lives under server/skills/<skillName>/ and contains:
   {baseDir}/scripts/example.sh <subcommand> [args...]
   \`\`\`
 - Include an "Available Commands" section listing each subcommand.
-- Include a "Usage Notes" section with examples showing the exec tool call format:
-  - command: \`{baseDir}/scripts/example.sh\`
-  - args: \`["subcommand", "arg1"]\`
+- Skill scripts are invoked via exec (server-side). Use {baseDir}/scripts/... paths.
+- If the skill also needs user's local files, document those commands with localExec.
 
 ## Script conventions
 
@@ -42,6 +41,11 @@ Each skill lives under server/skills/<skillName>/ and contains:
 - Use \`curl -sf\` for HTTP requests.
 - Include a usage() function and a case statement for subcommands.
 - Handle errors gracefully with fallback echo messages.
+
+## exec vs localExec
+- exec(command) — runs on the server. Use for skill scripts and API calls.
+- localExec(command) — runs on the user's machine. Use for file access, git, local apps.
+Most skills only need exec. Some need localExec to read user files before processing.
 
 ## Workflow
 
