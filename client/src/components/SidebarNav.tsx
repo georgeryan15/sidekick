@@ -6,7 +6,7 @@ import {
   Gear,
   Persons,
   House,
-  FaceRobot,
+  Thunderbolt,
   Sparkles,
   Plus,
   TrashBin,
@@ -17,7 +17,7 @@ import ContextMenu from "./ContextMenu";
 
 const menuItems = [
   { id: "home", label: "Home", path: "/", icon: House },
-  { id: "agents", label: "Agents", path: "/agents", icon: FaceRobot },
+  { id: "automations", label: "Automations", path: "/automations", icon: Thunderbolt },
   { id: "skills", label: "Skills", path: "/skills", icon: Sparkles },
   { id: "settings", label: "Settings", path: "/settings", icon: Gear },
 ];

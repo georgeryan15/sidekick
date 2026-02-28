@@ -2,14 +2,12 @@ import { useState } from "react";
 import {
   Avatar,
   Button,
-  ButtonGroup,
   Chip,
   Description,
   Dropdown,
   Label,
   Modal,
   Separator,
-  Surface,
   Switch,
   Tooltip,
   useOverlayState,
@@ -22,12 +20,11 @@ import {
   Gear,
   TrashBin,
   Pencil,
-  ChevronDown,
 } from "@gravity-ui/icons";
 
 // --- Types ---
 
-type AgentStatus = "active" | "pending" | "inactive" | "error";
+type AutomationStatus = "active" | "pending" | "inactive" | "error";
 
 interface Integration {
   name: string;
@@ -39,11 +36,11 @@ interface Skill {
   logo: string;
 }
 
-interface Agent {
+interface Automation {
   id: string;
   name: string;
   description: string;
-  status: AgentStatus;
+  status: AutomationStatus;
   integrations: Integration[];
   skills: Skill[];
   enabled: boolean;
@@ -53,7 +50,7 @@ interface Agent {
 
 // --- Mock Data ---
 
-const mockAgents: Agent[] = [
+const mockAutomations: Automation[] = [
   {
     id: "1",
     name: "Spec Builder",
@@ -171,7 +168,7 @@ const mockAgents: Agent[] = [
 // --- Status Helpers ---
 
 const statusConfig: Record<
-  AgentStatus,
+  AutomationStatus,
   {
     label: string;
     color: "success" | "warning" | "default" | "danger";
@@ -246,18 +243,18 @@ function AvatarGroup({
   );
 }
 
-// --- Agent Detail Modal ---
+// --- Automation Detail Modal ---
 
-function AgentModal({
-  agent,
+function AutomationModal({
+  automation,
   state,
 }: {
-  agent: Agent | null;
+  automation: Automation | null;
   state: ReturnType<typeof useOverlayState>;
 }) {
-  if (!agent) return null;
+  if (!automation) return null;
 
-  const status = statusConfig[agent.status];
+  const status = statusConfig[automation.status];
 
   return (
     <Modal state={state}>
@@ -266,7 +263,7 @@ function AgentModal({
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
-              <Modal.Heading>{agent.name}</Modal.Heading>
+              <Modal.Heading>{automation.name}</Modal.Heading>
             </Modal.Header>
             <Modal.Body className="flex flex-col gap-5">
               {/* Status & Meta */}
@@ -277,14 +274,14 @@ function AgentModal({
                     {status.label}
                   </span>
                 </Chip>
-                {agent.version && (
+                {automation.version && (
                   <Chip variant="secondary" size="sm" color="default">
-                    v{agent.version}
+                    v{automation.version}
                   </Chip>
                 )}
-                {agent.lastRun && (
+                {automation.lastRun && (
                   <span className="text-xs text-muted">
-                    Last run: {agent.lastRun}
+                    Last run: {automation.lastRun}
                   </span>
                 )}
               </div>
@@ -292,7 +289,7 @@ function AgentModal({
               {/* Description */}
               <div>
                 <p className="text-sm font-medium mb-1">Description</p>
-                <p className="text-sm text-muted">{agent.description}</p>
+                <p className="text-sm text-muted">{automation.description}</p>
               </div>
 
               <Separator />
@@ -301,7 +298,7 @@ function AgentModal({
               <div>
                 <p className="text-sm font-medium mb-2">Integrations</p>
                 <div className="flex flex-wrap gap-2">
-                  {agent.integrations.map((integration) => (
+                  {automation.integrations.map((integration) => (
                     <div
                       key={integration.name}
                       className="flex items-center gap-2 rounded-lg border border-default/40 px-3 py-1.5"
@@ -325,7 +322,7 @@ function AgentModal({
               <div>
                 <p className="text-sm font-medium mb-2">Skills</p>
                 <div className="flex flex-wrap gap-2">
-                  {agent.skills.map((skill) => (
+                  {automation.skills.map((skill) => (
                     <div
                       key={skill.name}
                       className="flex items-center gap-2 rounded-lg border border-default/40 px-3 py-1.5"
@@ -352,16 +349,16 @@ function AgentModal({
                     <div>
                       <p className="text-sm">Enabled</p>
                       <p className="text-xs text-muted">
-                        Allow this agent to run automatically
+                        Allow this automation to run automatically
                       </p>
                     </div>
-                    <Switch defaultSelected={agent.enabled} size="sm" />
+                    <Switch defaultSelected={automation.enabled} size="sm" />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm">Notifications</p>
                       <p className="text-xs text-muted">
-                        Receive alerts when this agent completes tasks
+                        Receive alerts when this automation completes tasks
                       </p>
                     </div>
                     <Switch defaultSelected size="sm" />
@@ -384,7 +381,7 @@ function AgentModal({
                 </Button>
                 <Button size="sm">
                   <Pencil className="size-3.5" />
-                  Edit Agent
+                  Edit Automation
                 </Button>
               </div>
             </Modal.Footer>
@@ -397,72 +394,23 @@ function AgentModal({
 
 // --- Main Page ---
 
-export default function Agents() {
+export default function Automations() {
   const modalState = useOverlayState();
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [selectedAutomation, setSelectedAutomation] =
+    useState<Automation | null>(null);
 
-  const handleRowClick = (agent: Agent) => {
-    setSelectedAgent(agent);
+  const handleRowClick = (automation: Automation) => {
+    setSelectedAutomation(automation);
     modalState.open();
   };
 
   return (
     <div className="flex flex-col gap-4 p-2 h-full overflow-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Agents</h1>
-        <div>
-          <ButtonGroup>
-            <Button>Merge pull request</Button>
-            <Dropdown>
-              <Button isIconOnly aria-label="More options">
-                <ChevronDown />
-              </Button>
-              <Dropdown.Popover
-                className="max-w-[290px]"
-                placement="bottom end"
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    className="flex flex-col items-start gap-1"
-                    id="merge"
-                    textValue="Create a merge commit"
-                  >
-                    <Label>Create a merge commit</Label>
-                    <Description>
-                      All commits from this branch will be added to the base
-                      branch
-                    </Description>
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className="flex flex-col items-start gap-1"
-                    id="squash-and-merge"
-                    textValue="Squash and merge"
-                  >
-                    <Label>Squash and merge</Label>
-                    <Description>
-                      The 14 commits from this branch will be combined into one
-                      commit in the base branch
-                    </Description>
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className="flex flex-col items-start gap-1"
-                    id="rebase-and-merge"
-                    textValue="Rebase and merge"
-                  >
-                    <Label>Rebase and merge</Label>
-                    <Description>
-                      The 14 commits from this branch will be rebased and added
-                      to the base branch
-                    </Description>
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown.Popover>
-            </Dropdown>
-          </ButtonGroup>
-        </div>
+        <h1 className="text-2xl font-semibold">Automations</h1>
       </div>
 
-      <Surface className="rounded-2xl overflow-hidden">
+      <div className="rounded-2xl overflow-hidden">
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-default/30">
@@ -470,7 +418,7 @@ export default function Agents() {
                 Status
               </th>
               <th className="px-4 py-3 text-xs font-medium text-muted uppercase tracking-wider w-[160px]">
-                Agent Name
+                Name
               </th>
               <th className="px-4 py-3 text-xs font-medium text-muted uppercase tracking-wider">
                 Description
@@ -484,12 +432,12 @@ export default function Agents() {
             </tr>
           </thead>
           <tbody>
-            {mockAgents.map((agent) => {
-              const status = statusConfig[agent.status];
+            {mockAutomations.map((automation) => {
+              const status = statusConfig[automation.status];
               return (
                 <tr
-                  key={agent.id}
-                  onClick={() => handleRowClick(agent)}
+                  key={automation.id}
+                  onClick={() => handleRowClick(automation)}
                   className="border-b border-default/20 last:border-b-0 hover:bg-surface-secondary/60 cursor-pointer transition-colors"
                 >
                   <td className="px-4 py-3">
@@ -501,27 +449,29 @@ export default function Agents() {
                     </Chip>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-sm font-medium">{agent.name}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-sm text-muted line-clamp-1">
-                      {agent.description}
+                    <span className="text-sm font-medium">
+                      {automation.name}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <AvatarGroup items={agent.integrations} />
+                    <span className="text-sm text-muted line-clamp-1">
+                      {automation.description}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
-                    <AvatarGroup items={agent.skills} />
+                    <AvatarGroup items={automation.integrations} />
+                  </td>
+                  <td className="px-4 py-3">
+                    <AvatarGroup items={automation.skills} />
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </Surface>
+      </div>
 
-      <AgentModal agent={selectedAgent} state={modalState} />
+      <AutomationModal automation={selectedAutomation} state={modalState} />
     </div>
   );
 }

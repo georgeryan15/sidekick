@@ -29,6 +29,8 @@ export default function OverlayChatbar() {
   const [statusLines, setStatusLines] = useState<string[]>([]);
   const [isScanning, setIsScanning] = useState(false);
 
+  const [typedSuggestion, setTypedSuggestion] = useState("");
+
   const containerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const conversationIdRef = useRef<string | null>(null);
@@ -59,6 +61,21 @@ export default function OverlayChatbar() {
       resizeToContent();
     }
   }, [answer, statusLines, expanded, resizeToContent]);
+
+  // Typing effect for suggestion prompt
+  useEffect(() => {
+    if (!suggestion) {
+      setTypedSuggestion("");
+      return;
+    }
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTypedSuggestion(SUGGESTION_PROMPT.slice(0, i));
+      if (i >= SUGGESTION_PROMPT.length) clearInterval(id);
+    }, 25);
+    return () => clearInterval(id);
+  }, [suggestion]);
 
   // Clean up WebSocket on unmount
   useEffect(() => {
@@ -293,11 +310,13 @@ export default function OverlayChatbar() {
         {suggestion && !input && (
           <div className="absolute inset-y-0 left-3 flex items-center gap-1.5 pointer-events-none">
             <span className="text-sm text-neutral-400 truncate">
-              {SUGGESTION_PROMPT}
+              {typedSuggestion}
             </span>
-            <Kbd className="h-5 rounded px-1.5 text-[10px] bg-neutral-300/50 text-neutral-500 shrink-0">
-              ⌘K
-            </Kbd>
+            {typedSuggestion.length === SUGGESTION_PROMPT.length && (
+              <Kbd className="h-5 rounded px-1.5 text-[10px] bg-neutral-300/50 text-neutral-500 shrink-0">
+                ⌘K
+              </Kbd>
+            )}
           </div>
         )}
       </div>
