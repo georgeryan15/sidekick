@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import "./index.css";
 import App from "./App.tsx";
 import Home from "./pages/Home.tsx";
@@ -12,6 +13,7 @@ import OverlayRoot from "./overlay/OverlayRoot.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <ThemeProvider>
     <AuthProvider>
       <HashRouter>
         <Routes>
@@ -26,5 +28,6 @@ createRoot(document.getElementById("root")!).render(
         </Routes>
       </HashRouter>
     </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );

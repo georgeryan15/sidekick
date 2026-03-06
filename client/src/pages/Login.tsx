@@ -33,7 +33,7 @@ function Login() {
 
   return (
     <div className="flex h-screen items-center justify-center bg-surface-secondary">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-surface">
+      <div className="w-full max-w-sm rounded-2xl bg-surface p-8 shadow-surface">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight">Sidekick</h1>
           <p className="mt-1 text-sm text-muted">Sign in to your account</p>

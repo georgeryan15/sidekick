@@ -10,7 +10,7 @@ import {
 } from "@gravity-ui/icons";
 import Markdown from "react-markdown";
 import WidgetChip from "../components/overlay/WidgetChip";
-import ThinkingIndicator from "../components/ThinkingIndicator";
+import ThinkingIndicator from "../components/chat/ThinkingIndicator";
 import { useAuth } from "../context/AuthContext";
 
 const COLLAPSED_HEIGHT = 52;
@@ -227,12 +227,12 @@ export default function OverlayChatbar() {
     return (
       <div
         ref={containerRef}
-        className="flex flex-col max-h-[400px] bg-white/95 backdrop-blur-xl rounded-2xl shadow-lg border border-neutral-200/60 p-4 gap-3"
+        className="flex flex-col max-h-[400px] bg-surface/95 backdrop-blur-xl rounded-2xl shadow-lg border border-border/60 p-4 gap-3"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         {/* Header with question */}
         <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-medium text-neutral-800 pt-0.5">
+          <p className="text-sm font-medium text-foreground pt-0.5">
             {question}
           </p>
           <div className="flex gap-1 shrink-0">
@@ -262,7 +262,7 @@ export default function OverlayChatbar() {
           {isLoading && !answer ? (
             <ThinkingIndicator statusLines={statusLines} />
           ) : (
-            <div className="text-sm text-neutral-600 leading-relaxed markdown-body">
+            <div className="text-sm text-foreground leading-relaxed markdown-body">
               <Markdown>{answer}</Markdown>
             </div>
           )}
@@ -291,7 +291,7 @@ export default function OverlayChatbar() {
   return (
     <div
       ref={containerRef}
-      className="flex items-center h-full bg-white/95 backdrop-blur-xl rounded-full shadow-lg border border-neutral-200/60 px-3 gap-2"
+      className="flex items-center h-full bg-surface/95 backdrop-blur-xl rounded-full shadow-lg border border-border/60 px-3 gap-2"
       style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
     >
       <div className="relative flex-1 flex items-center">
@@ -309,11 +309,11 @@ export default function OverlayChatbar() {
         />
         {suggestion && !input && (
           <div className="absolute inset-y-0 left-3 flex items-center gap-1.5 pointer-events-none">
-            <span className="text-sm text-neutral-400 truncate">
+            <span className="text-sm text-muted truncate">
               {typedSuggestion}
             </span>
             {typedSuggestion.length === SUGGESTION_PROMPT.length && (
-              <Kbd className="h-5 rounded px-1.5 text-[10px] bg-neutral-300/50 text-neutral-500 shrink-0">
+              <Kbd className="h-5 rounded px-1.5 text-[10px] bg-default/50 text-muted shrink-0">
                 ⌘K
               </Kbd>
             )}

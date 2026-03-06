@@ -213,7 +213,7 @@ function AvatarGroup({
     <div className="flex items-center -space-x-2">
       {visible.map((item) => (
         <Tooltip key={item.name} delay={0}>
-          <Avatar size="sm" className="ring-2 ring-white size-7 text-[10px]">
+          <Avatar size="sm" className="ring-2 ring-surface size-7 text-[10px]">
             <Avatar.Image src={item.logo} alt={item.name} />
             <Avatar.Fallback delayMs={300}>
               {item.name.slice(0, 2).toUpperCase()}
@@ -226,7 +226,7 @@ function AvatarGroup({
       ))}
       {remaining > 0 && (
         <Tooltip delay={0}>
-          <Avatar size="sm" className="ring-2 ring-white size-7 text-[10px]">
+          <Avatar size="sm" className="ring-2 ring-surface size-7 text-[10px]">
             <Avatar.Fallback>+{remaining}</Avatar.Fallback>
           </Avatar>
           <Tooltip.Content>
@@ -405,7 +405,7 @@ export default function Automations() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-2 h-full overflow-auto">
+    <div className="flex flex-col gap-4 p-2 h-full overflow-auto bg-surface rounded-2xl shadow-sm">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Automations</h1>
       </div>

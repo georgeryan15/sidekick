@@ -1,0 +1,60 @@
+{
+  "frontmostApp": "Notion",
+  "bundleId": "notion.id",
+  "windowTitle": "Placeholder Idea",
+  "focusedElement": {
+    "role": "",
+    "value": "",
+    "description": ""
+  },
+  "selectedText": "",
+  "browserURL": "",
+  "windowContent": [
+    {
+      "role": "AXWindow",
+      "title": "Placeholder Idea"
+    },
+    {
+      "role": "AXWindow",
+      "description": "standard window"
+    },
+    {
+      "role": "AXGroup",
+      "title": "Placeholder Idea"
+    },
+    {
+      "role": "AXButton",
+      "description": "close button"
+    },
+    {
+      "role": "AXButton",
+      "description": "full screen button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXButton",
+      "description": "minimise button"
+    }
+  ],
+  "visibleWindows": [
+    "Finder | Recents",
+    "Google Chrome | (276) 7 OpenClaw Skills To 10x Your Business Output - YouTube - Google Chrome",
+    "Google Chrome | System Prompt - OpenClaw - Google Chrome",
+    "Google Chrome | New tab - Google Chrome",
+    "Terminal | Sidekick — ✳ Claude Code — node ◂ claude — 87×85",
+    "Notes | Notes – 175 notes",
+    "ChatGPT | ChatGPT",
+    "Microsoft Word | Document6",
+    "Cursor | context-2026-03-05T23-24-30-919Z.json — Sidekick",
+    "Spotify | Luke Combs - Does To Me (feat. Eric Church)",
+    "Adobe Photoshop 2026 | ",
+    "Claude | Claude",
+    "Notion | Placeholder Idea",
+    "Sky Go | Sky Go",
+    "Electron | client"
+  ],
+  "timestamp": "2026-03-05T23:25:09.402Z"
+}

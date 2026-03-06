@@ -11,8 +11,8 @@ let overlayWindow = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1800,
+    height: 1200,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -90,13 +90,17 @@ ipcMain.handle("overlay:resize", (_event, height) => {
 
 ipcMain.handle("exec:run", (_event, command) => {
   return new Promise((resolve) => {
-    exec(command, { timeout: 30_000, env: { ...process.env } }, (error, stdout, stderr) => {
-      if (error) {
-        resolve(`Error: ${error.message}\n${stderr}`.trim());
-        return;
+    exec(
+      command,
+      { timeout: 30_000, env: { ...process.env } },
+      (error, stdout, stderr) => {
+        if (error) {
+          resolve(`Error: ${error.message}\n${stderr}`.trim());
+          return;
+        }
+        resolve(stdout || stderr || "(no output)");
       }
-      resolve(stdout || stderr || "(no output)");
-    });
+    );
   });
 });
 
@@ -231,7 +235,9 @@ JSON.stringify({
       { timeout: 15_000 },
       (error, stdout, stderr) => {
         // Clean up temp file
-        try { fs.unlinkSync(tmpFile); } catch {}
+        try {
+          fs.unlinkSync(tmpFile);
+        } catch {}
 
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const filename = `context-${timestamp}.json`;

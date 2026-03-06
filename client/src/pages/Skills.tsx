@@ -234,7 +234,7 @@ export default function Skills() {
     : mockSkills;
 
   return (
-    <div className="flex flex-col gap-6 p-6 h-full overflow-auto">
+    <div className="flex flex-col gap-6 p-6 h-full overflow-auto bg-surface rounded-2xl shadow-sm">
       {/* Search bar */}
       <div className="flex justify-end">
         <SearchField value={query} onChange={setQuery}>
@@ -252,7 +252,7 @@ export default function Skills() {
           <div
             key={skill.id}
             className={`flex items-center gap-4 py-4 ${
-              index < filteredSkills.length - 2 ? "border-b border-neutral-100" : ""
+              index < filteredSkills.length - 2 ? "border-b border-border" : ""
             }`}
           >
             {/* Icon */}
@@ -263,7 +263,7 @@ export default function Skills() {
               />
               <Avatar.Fallback
                 delayMs={300}
-                className="rounded-xl bg-neutral-100 text-sm"
+                className="rounded-xl bg-default text-sm"
               >
                 {skill.name.slice(0, 2).toUpperCase()}
               </Avatar.Fallback>
@@ -271,13 +271,13 @@ export default function Skills() {
 
             {/* Info */}
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-xs text-neutral-400 font-medium">
+              <span className="text-xs text-muted font-medium">
                 {skill.author}
               </span>
               <span className="text-sm font-semibold truncate">
                 {skill.name}
               </span>
-              <span className="text-xs text-neutral-400 truncate">
+              <span className="text-xs text-muted truncate">
                 {skill.subtitle}
               </span>
             </div>

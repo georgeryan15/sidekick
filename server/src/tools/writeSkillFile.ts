@@ -2,17 +2,18 @@ import { tool } from "@openai/agents";
 import { z } from "zod";
 import fs from "fs";
 import path from "path";
+import os from "os";
 
-const SKILLS_ROOT = path.resolve(__dirname, "../../skills");
+const SKILLS_ROOT = path.join(os.homedir(), ".sidekick", "skills");
 
 export const writeSkillFile = tool({
   name: "write_skill_file",
   description:
-    "Write a file into a skill directory under server/skills/<skillName>/. Use this to create SKILL.md files, shell scripts, and other skill assets.",
+    "Write a file into a skill directory under ~/.sidekick/skills/<skillName>/. Use this to create SKILL.md files, shell scripts, and other skill assets.",
   parameters: z.object({
     skillName: z
       .string()
-      .describe("Name of the skill (becomes the directory name under server/skills/)"),
+      .describe("Name of the skill (becomes the directory name under ~/.sidekick/skills/)"),
     filePath: z
       .string()
       .describe(

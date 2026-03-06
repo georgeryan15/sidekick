@@ -1,0 +1,728 @@
+{
+  "frontmostApp": "Microsoft Word",
+  "bundleId": "com.microsoft.Word",
+  "windowTitle": "Document6",
+  "focusedElement": {
+    "role": "",
+    "value": "",
+    "description": ""
+  },
+  "selectedText": "",
+  "browserURL": "",
+  "windowContent": [
+    {
+      "role": "AXWindow",
+      "title": "Document6"
+    },
+    {
+      "role": "AXWindow",
+      "description": "standard window"
+    },
+    {
+      "role": "AXSplitGroup",
+      "description": "split group"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXSplitGroup",
+      "description": "split group"
+    },
+    {
+      "role": "AXSplitGroup",
+      "description": "split group"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXScrollArea",
+      "description": "scroll area"
+    },
+    {
+      "role": "AXSplitter",
+      "description": "splitter"
+    },
+    {
+      "role": "AXTabGroup",
+      "description": "ribbon"
+    },
+    {
+      "role": "AXScrollArea",
+      "description": "Home Tab Commands"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Paste"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Cut"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Copy"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Format"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXComboBox",
+      "description": "Font:"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXComboBox",
+      "description": "Font Size:"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Grow Font"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Shrink Font"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Change Case"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Clear Formatting"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Bold"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Italic"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Underline"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Strikethrough"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Subscript"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Superscript"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Text Effects"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Text Highlight Colour"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Font Colour"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Bulletpoints"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Numbering"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Multi-level List"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Decrease Indent"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Increase Indent"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Sort"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Show formatting marks"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Align to Left"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Centre"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Align to Right"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Justify"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Line and Paragraph Spacing"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Shading"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Borders"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXScrollArea",
+      "description": "Styles"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "¶ Normal"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "¶ No Spacing"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Heading 1"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Heading 2"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Title"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Subtitle"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Subtle Emphasis"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Emphasis"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Intense Emphasis"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Subtle Reference"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Intense Reference"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "Book Title"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "¶ List Paragraph"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Styles Pane"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Dictate"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "toggle button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXButton",
+      "title": "Add‑ins"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXButton",
+      "title": "Editor"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Copilot"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Home"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Insert"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Draw"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Design"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Layout"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "References"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Mailings"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "Review"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXRadioButton",
+      "title": "View"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "tab"
+    },
+    {
+      "role": "AXButton",
+      "title": "Comments"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Editing"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Share"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "Status Bar"
+    },
+    {
+      "role": "AXButton",
+      "title": "Page 1 of 1"
+    },
+    {
+      "role": "AXButton",
+      "title": "87 words"
+    },
+    {
+      "role": "AXButton",
+      "description": "Proofing errors were found. Click to correct."
+    },
+    {
+      "role": "AXButton",
+      "title": "English (United Kingdom)"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "Accessibility: Good to go"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": " Focus"
+    },
+    {
+      "role": "AXRadioGroup",
+      "description": "radio group"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "radio button"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "radio button"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "radio button"
+    },
+    {
+      "role": "AXRadioButton",
+      "description": "radio button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Zoom Out"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Zoom In"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXSlider",
+      "description": "slider"
+    },
+    {
+      "role": "AXValueIndicator",
+      "description": "value indicator"
+    },
+    {
+      "role": "AXButton",
+      "title": "124%"
+    },
+    {
+      "role": "AXToolbar",
+      "description": "toolbar"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXCheckBox",
+      "title": "AutoSave"
+    },
+    {
+      "role": "AXCheckBox",
+      "description": "switch"
+    },
+    {
+      "role": "AXButton",
+      "title": "Home"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Save"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Undo Typing"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Repeat Copy"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXButton",
+      "title": "Print"
+    },
+    {
+      "role": "AXButton",
+      "description": "button"
+    },
+    {
+      "role": "AXMenuButton",
+      "title": "Customise Quick Access Toolbar"
+    },
+    {
+      "role": "AXMenuButton",
+      "description": "menu button"
+    },
+    {
+      "role": "AXTextField",
+      "description": "Search (Cmd + Ctrl + U)"
+    },
+    {
+      "role": "AXButton",
+      "description": "Search"
+    },
+    {
+      "role": "AXStaticText",
+      "text": "Document6"
+    },
+    {
+      "role": "AXButton",
+      "description": "close button"
+    },
+    {
+      "role": "AXButton",
+      "description": "full screen button"
+    },
+    {
+      "role": "AXGroup",
+      "description": "group"
+    },
+    {
+      "role": "AXButton",
+      "description": "minimise button"
+    }
+  ],
+  "visibleWindows": [
+    "Finder | Recents",
+    "Google Chrome | (276) 7 OpenClaw Skills To 10x Your Business Output - YouTube - Google Chrome",
+    "Google Chrome | System Prompt - OpenClaw - Google Chrome",
+    "Google Chrome | New tab - Google Chrome",
+    "Terminal | Sidekick — ✳ Claude Code — node ◂ claude — 87×85",
+    "Notes | Notes – 175 notes",
+    "ChatGPT | ChatGPT",
+    "Microsoft Word | Document6",
+    "Cursor | context-2026-03-05T23-25-09-402Z.json — Sidekick",
+    "Spotify | Luke Combs - Does To Me (feat. Eric Church)",
+    "Adobe Photoshop 2026 | ",
+    "Claude | Claude",
+    "Notion | Placeholder Idea",
+    "Sky Go | Sky Go",
+    "Electron | client"
+  ],
+  "timestamp": "2026-03-05T23:25:42.507Z"
+}

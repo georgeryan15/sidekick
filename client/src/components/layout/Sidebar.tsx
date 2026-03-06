@@ -1,32 +1,45 @@
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { Avatar, Button, Dropdown, Label, ListBox, Separator, Spinner } from "@heroui/react";
-import type { Selection } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Label,
+  Separator,
+  Spinner,
+} from "@heroui/react";
 import {
   ArrowRightFromSquare,
   Gear,
   Persons,
-  House,
   Thunderbolt,
   Sparkles,
-  Plus,
   TrashBin,
+  Comment,
+  Moon,
+  Sun,
 } from "@gravity-ui/icons";
-import { useAuth } from "../context/AuthContext";
-import { useConversationContext } from "../context/ConversationContext";
-import ContextMenu from "./ContextMenu";
+import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
+import { useConversationContext } from "../../context/ConversationContext";
+import ContextMenu from "../shared/ContextMenu";
 
-const menuItems = [
-  { id: "home", label: "Home", path: "/", icon: House },
-  { id: "automations", label: "Automations", path: "/automations", icon: Thunderbolt },
+const navLinks = [
+  {
+    id: "automations",
+    label: "Automations",
+    path: "/automations",
+    icon: Thunderbolt,
+  },
   { id: "skills", label: "Skills", path: "/skills", icon: Sparkles },
   { id: "settings", label: "Settings", path: "/settings", icon: Gear },
 ];
 
-function SidebarNav() {
+export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { conversationId } = useParams();
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const { conversations, isLoading, deleteConversation } =
     useConversationContext();
 
@@ -39,58 +52,47 @@ function SidebarNav() {
     .toUpperCase()
     .slice(0, 2);
 
-  const currentItem =
-    menuItems.find((item) => item.path === location.pathname) ?? null;
-
-  const handleSelectionChange = (keys: Selection) => {
-    if (keys === "all") return;
-    const selected = [...keys][0] as string;
-    const item = menuItems.find((m) => m.id === selected);
-    if (item) navigate(item.path);
-  };
+  const isNavActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="w-[220px] shrink-0 rounded-2xl shadow-surface p-2 flex flex-col bg-white">
-      {/* Navigation menu items */}
-      <nav>
-        <ListBox
-          aria-label="Navigation"
-          selectionMode="single"
-          selectedKeys={currentItem ? new Set([currentItem.id]) : new Set()}
-          onSelectionChange={handleSelectionChange}
-          disallowEmptySelection={false}
-        >
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <ListBox.Item
-                key={item.id}
-                id={item.id}
-                textValue={item.label}
-                className={`w-full rounded-full px-3 py-1 font-normal text-sm ${
-                  currentItem?.id === item.id
-                    ? "bg-neutral-100 text-accent"
-                    : ""
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <Icon className={`size-4 ${currentItem?.id === item.id ? "text-accent" : "text-neutral-500"}`} />
-                  <Label className={`font-normal text-sm ${currentItem?.id === item.id ? "text-accent" : ""}`}>{item.label}</Label>
-                </div>
-              </ListBox.Item>
-            );
-          })}
-        </ListBox>
+    <div className="flex w-[220px] shrink-0 flex-col py-1">
+      {/* New thread button */}
+      <div className="px-1">
+        <Button className="w-full rounded-xl" onPress={() => navigate("/")}>
+          New thread
+        </Button>
+      </div>
+
+      {/* Nav links */}
+      <nav className="mt-3 flex flex-col gap-0.5 px-1">
+        {navLinks.map((item) => {
+          const Icon = item.icon;
+          const active = isNavActive(item.path);
+          return (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
+                active
+                  ? "bg-default text-accent font-medium"
+                  : "text-muted hover:bg-default/60 hover:text-foreground"
+              }`}
+            >
+              <Icon className="size-4" />
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
-      {/* Recents section */}
-      <div className="mt-4 mb-1 px-3">
-        <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wide">
-          Recents
+      {/* Threads section */}
+      <div className="mt-3 px-3.5">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
+          Threads
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div className="mt-1 flex-1 overflow-y-auto px-1 min-h-0">
         {isLoading && conversations.length === 0 && (
           <div className="flex justify-center py-3">
             <Spinner size="sm" />
@@ -103,11 +105,15 @@ function SidebarNav() {
               key={conv.id}
               context={conv.id}
               items={[
-                { id: "delete", label: "Delete", variant: "danger", icon: <TrashBin className="size-4 shrink-0 text-danger" /> },
+                {
+                  id: "delete",
+                  label: "Delete",
+                  variant: "danger",
+                  icon: <TrashBin className="size-4 shrink-0 text-danger" />,
+                },
               ]}
               onAction={(_key, convId) => {
                 const id = convId as string;
-                // Navigate away if the user is viewing this conversation
                 if (conversationId === id) {
                   navigate("/");
                 }
@@ -116,10 +122,10 @@ function SidebarNav() {
             >
               <button
                 onClick={() => navigate(`/c/${conv.id}`)}
-                className={`w-full text-left rounded-full px-3 py-1 text-sm truncate transition-colors ${
+                className={`w-full truncate rounded-lg px-2.5 py-1.5 text-left text-sm transition-colors ${
                   conversationId === conv.id
-                    ? "bg-neutral-100 font-medium"
-                    : "hover:bg-neutral-50 text-neutral-600"
+                    ? "bg-default text-accent font-medium"
+                    : "text-muted hover:bg-default/60 hover:text-foreground"
                 }`}
               >
                 {conv.title}
@@ -129,17 +135,7 @@ function SidebarNav() {
         </div>
       </div>
 
-      {/* New chat button */}
-      <div className="px-1 pt-1">
-        <button
-          onClick={() => navigate("/")}
-          className="w-full flex items-center gap-2 rounded-full px-3 py-1 text-sm text-neutral-500 hover:bg-neutral-50 transition-colors"
-        >
-          <Plus className="size-3.5" />
-          New Chat
-        </button>
-      </div>
-
+      {/* Test overlay button */}
       <div className="px-1 pt-1">
         <Button
           className="w-full rounded-full"
@@ -152,16 +148,16 @@ function SidebarNav() {
 
       <Separator className="my-2" />
 
-      {/* User avatar and dropdown */}
-      <div>
+      {/* User dropdown */}
+      <div className="px-1">
         <Dropdown>
           <Dropdown.Trigger className="w-full rounded-xl">
-            <div className="flex w-full items-center gap-2.5 rounded-xl px-2 py-1.5 text-left hover:bg-neutral-50 transition-colors">
+            <div className="flex w-full items-center gap-2.5 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-default/60">
               <Avatar size="sm">
                 <Avatar.Fallback>{initials}</Avatar.Fallback>
               </Avatar>
               <div className="min-w-0 flex flex-col">
-                <p className="truncate text-sm leading-5 font-medium">
+                <p className="truncate text-sm font-medium leading-5 text-foreground">
                   {fullName}
                 </p>
               </div>
@@ -174,7 +170,7 @@ function SidebarNav() {
                   <Avatar.Fallback>{initials}</Avatar.Fallback>
                 </Avatar>
                 <div className="flex flex-col gap-0">
-                  <p className="text-sm leading-5 font-medium">{fullName}</p>
+                  <p className="text-sm font-medium leading-5">{fullName}</p>
                   <p className="text-xs leading-none text-muted">{email}</p>
                 </div>
               </div>
@@ -199,6 +195,20 @@ function SidebarNav() {
                 </div>
               </Dropdown.Item>
               <Dropdown.Item
+                id="theme"
+                textValue="Toggle theme"
+                onAction={toggleTheme}
+              >
+                <div className="flex w-full items-center justify-between gap-2">
+                  <Label>{theme === "light" ? "Dark Mode" : "Light Mode"}</Label>
+                  {theme === "light" ? (
+                    <Moon className="size-3.5 text-muted" />
+                  ) : (
+                    <Sun className="size-3.5 text-muted" />
+                  )}
+                </div>
+              </Dropdown.Item>
+              <Dropdown.Item
                 id="logout"
                 textValue="Logout"
                 variant="danger"
@@ -216,5 +226,3 @@ function SidebarNav() {
     </div>
   );
 }
-
-export default SidebarNav;

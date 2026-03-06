@@ -16,7 +16,7 @@ export function buildInstructions(
   return `${baseInstructions}
 
 <available_skills>
-Skill scripts run on the server. Use the exec tool to invoke them.
+Skill scripts run on the user's machine. Use the exec tool to invoke them.
 
 ${skillBlocks}
 </available_skills>`;

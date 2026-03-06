@@ -1,0 +1,44 @@
+{
+  "frontmostApp": "Electron",
+  "bundleId": "com.github.Electron",
+  "windowTitle": "client",
+  "focusedElement": {
+    "role": "",
+    "value": "",
+    "description": ""
+  },
+  "selectedText": "",
+  "browserURL": "",
+  "windowContent": [
+    {
+      "role": "AXWindow",
+      "title": "client"
+    },
+    {
+      "role": "AXWindow",
+      "description": "standard window"
+    },
+    {
+      "role": "AXGroup",
+      "title": "client"
+    }
+  ],
+  "visibleWindows": [
+    "Finder | Recents",
+    "Google Chrome | System Prompt - OpenClaw - Google Chrome",
+    "Google Chrome | (276) 7 OpenClaw Skills To 10x Your Business Output - YouTube - Google Chrome",
+    "Google Chrome | New tab - Google Chrome",
+    "Terminal | Sidekick — ✳ Claude Code — node ◂ claude — 87×85",
+    "Notes | Notes – 175 notes",
+    "ChatGPT | ChatGPT",
+    "Microsoft Word | Document6",
+    "Cursor | Preview SKILL.md — Sidekick",
+    "Spotify | Luke Combs - Does To Me (feat. Eric Church)",
+    "Adobe Photoshop 2026 | ",
+    "Claude | Claude",
+    "Notion | Placeholder Idea",
+    "Sky Go | Sky Go",
+    "Electron | client"
+  ],
+  "timestamp": "2026-03-05T23:24:30.920Z"
+}

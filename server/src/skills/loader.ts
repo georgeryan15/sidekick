@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 export interface Skill {
   name: string;
@@ -8,7 +9,7 @@ export interface Skill {
   scriptsDir: string;
 }
 
-const SKILLS_ROOT = path.resolve(__dirname, "../../skills");
+const SKILLS_ROOT = path.join(os.homedir(), ".sidekick", "skills");
 
 function parseFrontmatter(raw: string): {
   attrs: Record<string, string>;

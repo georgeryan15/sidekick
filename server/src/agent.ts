@@ -1,6 +1,5 @@
 import { Agent, handoff } from "@openai/agents";
-import { execTool } from "./tools/exec";
-import { localExecTool } from "./tools/localExec";
+import { execTool } from "./tools/localExec";
 import { loadSkills } from "./skills/loader";
 import { buildInstructions } from "./skills/prompt";
 import { skillBuilderAgent } from "./agents/skillBuilder";
@@ -11,24 +10,10 @@ If the user wants to create or build a new skill, hand off to the SkillBuilder a
 
 ## Tool Usage
 
-You have two execution tools:
-
 ### exec(command)
-Runs on the server. Use for:
-- Skill scripts (paths from skill instructions)
-- API calls (curl, wget)
-- Server-side processing (node, python)
-- Anything that does NOT need the user's local files or apps
+Runs commands on the user's machine. Use for everything: file operations, git, running scripts, API calls, opening apps, and invoking skill scripts.
 
-### localExec(command)
-Runs on the user's local machine. Use for:
-- File operations (ls, cat, mkdir, cp, mv)
-- Git commands on user repos
-- Opening local apps (open, osascript)
-- Reading/writing user documents
-
-If localExec fails with a connection error, tell the user their device needs to be connected.
-When a skill's instructions reference script paths, use exec — those scripts live on the server.`;
+If exec fails with a connection error, tell the user their device needs to be connected.`;
 
 const skills = loadSkills();
 
@@ -47,6 +32,6 @@ export const agent = new Agent({
       summary: "concise",
     },
   },
-  tools: [execTool, localExecTool],
+  tools: [execTool],
   handoffs: [handoff(skillBuilderAgent)],
 });

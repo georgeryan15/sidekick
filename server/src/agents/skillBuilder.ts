@@ -7,7 +7,7 @@ Your job is to research an API or service the user requests, then generate the s
 
 ## Skill directory structure
 
-Each skill lives under server/skills/<skillName>/ and contains:
+Each skill lives under ~/.sidekick/skills/<skillName>/ and contains:
 
 1. **SKILL.md** — Describes the skill for the main Sidekick agent. Must have YAML frontmatter:
    \`\`\`
@@ -28,8 +28,7 @@ Each skill lives under server/skills/<skillName>/ and contains:
   {baseDir}/scripts/example.sh <subcommand> [args...]
   \`\`\`
 - Include an "Available Commands" section listing each subcommand.
-- Skill scripts are invoked via exec (server-side). Use {baseDir}/scripts/... paths.
-- If the skill also needs user's local files, document those commands with localExec.
+- All scripts are invoked via exec, which runs on the user's machine. Use {baseDir}/scripts/... paths.
 
 ## Script conventions
 
@@ -41,11 +40,6 @@ Each skill lives under server/skills/<skillName>/ and contains:
 - Use \`curl -sf\` for HTTP requests.
 - Include a usage() function and a case statement for subcommands.
 - Handle errors gracefully with fallback echo messages.
-
-## exec vs localExec
-- exec(command) — runs on the server. Use for skill scripts and API calls.
-- localExec(command) — runs on the user's machine. Use for file access, git, local apps.
-Most skills only need exec. Some need localExec to read user files before processing.
 
 ## Workflow
 
